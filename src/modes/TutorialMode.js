@@ -95,10 +95,27 @@ export class TutorialMode extends GameModeBase {
 
     this.isFreePlay = !!step.freePlay;
 
+    // 카메라를 탑뷰에 가깝게 설정 (오버레이가 기물을 가리지 않도록)
+    this.cameraController.animateTo(
+      { x: 0, y: 12, z: 5 },
+      { x: 0, y: 0, z: 0 },
+      true
+    );
+
+    // 튜토리얼 모드에서는 게임 종료 이벤트를 차단
+    if (this._gameOverBlocker) this._gameOverBlocker();
+    this._gameOverBlocker = eventBus.on(EVENTS.GAME_OVER, (data) => {
+      // 게임 종료 모달 표시를 막기 위해 모달 오버레이를 숨김
+      const modal = document.getElementById('modal-overlay');
+      if (modal) {
+        modal.classList.add('hidden');
+        modal.innerHTML = '';
+      }
+    });
+
     // 자유 플레이 모드
     if (this.isFreePlay) {
       super.start();
-      this.cameraController.setWhiteView(false);
     } else {
       this.inputHandler.setEnabled(false);
     }
@@ -115,7 +132,7 @@ export class TutorialMode extends GameModeBase {
     const isLast = stepIdx === totalSteps - 1;
 
     container.innerHTML = `
-      <div class="center-area" style="pointer-events:none;">
+      <div class="center-area" style="pointer-events:none;position:relative;">
         <div class="top-bar" style="pointer-events:auto;">
           <div class="top-bar-left">
             <button class="back-btn" id="tutorial-back-list">← 목록</button>
@@ -123,7 +140,6 @@ export class TutorialMode extends GameModeBase {
           </div>
           <span style="color:var(--color-text-dim);font-size:0.9rem;">${stepIdx + 1} / ${totalSteps}</span>
         </div>
-        <div style="flex:1;"></div>
         <div class="tutorial-overlay" style="pointer-events:auto;">
           <div class="tutorial-text">${step.text}</div>
           <div class="tutorial-nav">
@@ -132,6 +148,7 @@ export class TutorialMode extends GameModeBase {
             <button class="tutorial-nav-btn primary" id="tutorial-next">${isLast ? '완료 ✓' : '다음 →'}</button>
           </div>
         </div>
+        <div style="flex:1;"></div>
       </div>
     `;
 
@@ -193,6 +210,10 @@ export class TutorialMode extends GameModeBase {
   }
 
   cleanup() {
+    if (this._gameOverBlocker) {
+      this._gameOverBlocker();
+      this._gameOverBlocker = null;
+    }
     super.cleanup();
   }
 }

@@ -6,7 +6,7 @@ export const STRATEGY_LESSONS = [
     description: '보드 중앙을 지배하는 것이 왜 중요한지 배웁니다.',
     steps: [
       { text: 'e4, d4, e5, d5 네 칸을 "중앙"이라고 합니다. 중앙을 지배하면 기물이 더 많은 칸을 제어할 수 있습니다.', fen: 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1', highlights: ['d4', 'e4', 'd5', 'e5'] },
-      { text: 'e4에 있는 나이트는 가장자리에 있는 나이트보다 두 배 이상 많은 칸을 제어합니다!', fen: '8/8/8/8/4N3/8/8/N7 w - - 0 1', highlights: [] },
+      { text: 'e4에 있는 나이트는 가장자리에 있는 나이트보다 두 배 이상 많은 칸을 제어합니다!', fen: '4k3/8/8/8/4N3/8/8/N3K3 w - - 0 1', highlights: [] },
     ]
   },
   {
